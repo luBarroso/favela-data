@@ -1,9 +1,15 @@
-import { Container } from "./styles";
+import { Container, InfoText } from "./styles";
 
-export const Information = () => {
+interface Props {
+  favela: String;
+  bairro: String;
+}
+
+export const Information = ({ favela: favela, bairro: bairro }: Props) => {
   return (
     <Container>
-      <p>Teste</p>
+      <InfoText>favela: {favela}</InfoText>
+      <InfoText>bairro: {bairro}</InfoText>
     </Container>
   );
 };

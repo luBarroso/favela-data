@@ -1,3 +1,5 @@
+import { PointMarker } from "./styles";
+
 export const Point = () => {
-  return <button type="button" />;
+  return <PointMarker />;
 };
