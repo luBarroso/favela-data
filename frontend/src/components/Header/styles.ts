@@ -23,7 +23,38 @@ export const Navegation = styled.nav`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  align-items: center;
   gap: 20px;
   flex: 1;
   padding: 20px;
+`;
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+export const SignupButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #78a050;
+  border: 0;
+  padding: 10px;
+  color: #fff;
+  border-right: 1px solid black;
+  border-radius: 20px 0 0 20px;
+  outline: 0;
+`;
+
+export const LoginButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #78a050;
+  border: 0;
+  padding: 10px;
+  color: #fff;
+  border-radius: 0 20px 20px 0;
+  outline: 0;
 `;
