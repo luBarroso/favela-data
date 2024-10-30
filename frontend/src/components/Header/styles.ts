@@ -10,6 +10,8 @@ export const Container = styled.div`
   height: 10%;
   //padding: 10px 20px 10px 20px;
   color: #000;
+  position: fixed;
+  top: 0;
   box-shadow: 0px 5px 24px rgba(0, 0, 0, 0.1);
   z-index: 10;
 `;
@@ -17,6 +19,7 @@ export const Container = styled.div`
 export const Logo = styled.img`
   height: 50%;
   padding: 20px;
+  cursor: pointer;
 `;
 
 export const Navegation = styled.nav`
