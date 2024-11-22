@@ -10,6 +10,15 @@ const getPontos = (req, res) => {
   });
 };
 
+const getCaminhos = (req, res) => {
+  pool.query(queries.getCaminhos, (error, results) => {
+    if (error) throw error;
+
+    console.log("tentou acessar");
+    res.status(200).json(results.rows);
+  });
+};
+
 const getPontoById = (req, res) => {
   const id = parseInt(req.params.id);
 
@@ -41,6 +50,7 @@ const addPonto = (req, res) => {
 
 module.exports = {
   getPontos,
+  getCaminhos,
   getPontoById,
   addPonto,
 };

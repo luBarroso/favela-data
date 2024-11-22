@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import { Header } from "../../components/Header";
-import { Main, Body, FormContainer, Forms, H2 } from "../Login/styles";
+import {
+  Main,
+  Body,
+  FormContainer,
+  Forms,
+  H2,
+  FormButton,
+} from "../Login/styles";
 
 export const Signup = () => {
   return (
@@ -25,7 +32,7 @@ export const Signup = () => {
             <label>Confirma sua senha</label>
             <input placeholder="********" type="password" />
           </FormContainer>
-          <button type="button">criar</button>
+          <FormButton type="button">criar</FormButton>
         </Forms>
         <Link to="/entrar">Já possui uma conta?</Link>
       </Main>

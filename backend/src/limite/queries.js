@@ -1,13 +1,43 @@
 const getLimites = `
 SELECT
-  'Feature' AS type,
-  jsonb_build_object(
-    'type', 'MultiPolygon',
-    'coordinates', ST_AsGeoJSON(ST_Transform(
-            ST_SetSRID(geom, 31983), 
-            4326))::jsonb->'coordinates'
-  ) AS geometry
-FROM limite.favela;
+    'Feature' AS type,
+    ST_AsGeoJSON(ST_Transform(geom, 4326))::jsonb AS geometry,
+    jsonb_build_object(
+        'fid', fid,
+        'codfavela', codfavela,
+        'nome', nome,
+        'cod_comple', cod_comple,
+        'complexo', complexo,
+        'porte', porte,
+        'upp', upp,
+        'bairro_', bairro_,
+        'rp', rp,
+        'ra', ra,
+        'ap', ap,
+        'classifica', classifica,
+        'morfologia', morfologia
+    ) AS properties
+FROM public."MFV_AP3_FAVELAS_CAT_MORFO";
+`;
+
+const getSubAps = `
+SELECT
+    'Feature' AS type,
+    ST_AsGeoJSON(ST_Transform(geom, 4326))::jsonb AS geometry,
+    jsonb_build_object(
+        'fid', fid,
+        'área', área,
+        'nome', nome,
+        'regiao_adm', regiao_adm,
+        'area_plane', area_plane,
+        'codbairro', codbairro,
+        'codra', codra,
+        'codbnum', codbnum,
+        'rp', rp,
+        'cod_rp', cod_rp,
+        'codbairro_', codbairro_
+    ) AS properties
+FROM public."MFV_AP3_BAIRROS_SUBAPS";
 `;
 
 /*
@@ -45,4 +75,5 @@ jsonb_build_object(
 
 module.exports = {
   getLimites,
+  getSubAps,
 };

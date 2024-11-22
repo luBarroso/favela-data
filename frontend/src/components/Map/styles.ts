@@ -13,13 +13,18 @@ export const MapContainer = styled.div`
   height: 100%;
 `;
 
-export const InfromationContainer = styled.div`
+export const InformationContainer = styled.div<{ open: boolean }>`
   display: flex;
   flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: ${({ open }) => (open ? "0" : "-100%")};
   background: #fff;
+  margin-top: 5%;
   width: 30%;
   height: 100%;
   color: #000;
+  transition: right 0.5s ease;
 `;
 
 export const InformationButton = styled.button`
@@ -32,4 +37,13 @@ export const InformationButton = styled.button`
   background: transparent;
 
   color: black;
+`;
+
+export const ControlContainer = styled.div`
+  position: fixed;
+  left: 20px;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 40px;
 `;

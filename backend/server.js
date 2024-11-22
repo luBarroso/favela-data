@@ -1,6 +1,7 @@
 const express = require("express");
 const PointRouter = require("./src/ponto/routes");
 const LimitRouter = require("./src/limite/routes");
+const TransportRouter = require("./src/transporte/routes");
 const app = express();
 const port = 3000;
 
@@ -15,5 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use("/api/v1", PointRouter);
 app.use("/api/v1", LimitRouter);
+app.use("/api/v1", TransportRouter);
 
 app.listen(port, () => console.log(`app escutando na porta ${port}`));

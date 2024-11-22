@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const Body = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 90vh;
+  margin-top: 5%;
   background: #fff;
   display: flex;
   flex-direction: column;
@@ -17,7 +18,7 @@ export const Main = styled.div`
   justify-content: center;
   background: #e5e5e5;
   width: 500px;
-  height: 600px;
+  height: 90%;
   border-radius: 20px;
   gap: 30px;
 `;
@@ -34,7 +35,7 @@ export const Forms = styled.form`
   align-items: center;
   justify-content: center;
   color: black;
-  gap: 20px;
+  gap: 5px;
   width: 70%;
 
   input {
@@ -64,4 +65,8 @@ export const FormContainer = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
+`;
+
+export const FormButton = styled.button`
+  margin: 10px;
 `;

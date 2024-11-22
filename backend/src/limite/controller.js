@@ -10,6 +10,16 @@ const getLimite = (req, res) => {
   });
 };
 
+const getSubAps = (req, res) => {
+  pool.query(queries.getSubAps, (error, results) => {
+    if (error) throw error;
+
+    console.log("tentou acessar");
+    res.status(200).json(results.rows);
+  });
+};
+
 module.exports = {
   getLimite,
+  getSubAps,
 };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Body, FormContainer, Forms, H2, Main } from "./styles";
+import { Body, FormButton, FormContainer, Forms, H2, Main } from "./styles";
 import { Header } from "../../components/Header";
 import { Link } from "react-router-dom";
 
@@ -20,7 +20,7 @@ export const Login = () => {
             <label>Senha</label>
             <input placeholder="********" type="password" />
           </FormContainer>
-          <button type="button">acessar</button>
+          <FormButton type="button">acessar</FormButton>
         </Forms>
         <Link to="/cadastro">Se cadastrar</Link>
       </Main>

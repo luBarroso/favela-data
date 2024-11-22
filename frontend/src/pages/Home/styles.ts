@@ -8,6 +8,7 @@ export const Container = styled.div`
 `;
 
 export const Main = styled.main`
+  margin-top: 5%;
   width: 100%;
   height: 100%;
 `;
