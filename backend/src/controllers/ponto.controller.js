@@ -1,11 +1,9 @@
-const pool = require("../../db");
-const queries = require("./queries");
+const pool = require("../../database/db");
+const queries = require("../queries/ponto.queries");
 
 const getPontos = (req, res) => {
   pool.query(queries.getPontos, (error, results) => {
     if (error) throw error;
-
-    console.log("tentou acessar");
     res.status(200).json(results.rows);
   });
 };
@@ -14,7 +12,6 @@ const getCaminhos = (req, res) => {
   pool.query(queries.getCaminhos, (error, results) => {
     if (error) throw error;
 
-    console.log("tentou acessar");
     res.status(200).json(results.rows);
   });
 };

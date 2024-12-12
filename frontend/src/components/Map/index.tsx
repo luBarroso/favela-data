@@ -38,6 +38,7 @@ interface PointInfoProps {
   cod_bairro: number;
   bairro: string;
   favela: string;
+  morfologia: string;
   cat_entrada: string;
   tipo_entrada: string;
   grau_entrada: string;
@@ -52,12 +53,18 @@ interface PointJson extends Feature<Geometry, GeoJsonProperties> {
   properties: PointInfoProps;
 }
 
+interface FavelaProperties {
+  name: string;
+  morfologia: string;
+}
+
 interface LimitJson extends Feature<Geometry, GeoJsonProperties> {
   type: "Feature";
   geometry: {
     type: "MultiPolygon";
     coordinates: number[][][][];
   };
+  properties: FavelaProperties;
 }
 
 interface SubapJson extends Feature<Geometry, GeoJsonProperties> {
@@ -111,10 +118,12 @@ const Map: React.FC<MapComponentProps> = () => {
     cod_bairro: 0,
     bairro: "",
     favela: "",
+    morfologia: "",
     cat_entrada: "",
     tipo_entrada: "",
     grau_entrada: "",
   });
+
   const [infoOpen, setInfoOpen] = useState(false);
 
   const [mapState, setMapState] = useState<MapComponentProps>({
@@ -135,7 +144,11 @@ const Map: React.FC<MapComponentProps> = () => {
   const [tMetro, setTMetro] = useState<pathJson[]>([]);
 
   const [isPMetroVisible, setIsPMetroVisible] = useState(false);
+  const [isPOnibusVisible, setIsPOnibusVisible] = useState(false);
+  const [isPTremVisible, setIsPTremVisible] = useState(false);
   const [isSubapVisible, setIsSubapVisiblee] = useState(false);
+
+  const [favelaSelected, setFavelaSelected] = useState("");
 
   const fetchData = async () => {
     try {
@@ -194,24 +207,28 @@ const Map: React.FC<MapComponentProps> = () => {
 
     if (mapContainer.current) {
       map.current = new maplibregl.Map({
-        container: mapContainer.current, // Passando o elemento DOM
+        container: mapContainer.current,
         style:
           "https://api.maptiler.com/maps/satellite/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
-        center: mapState.center, //o primeiro ponto do banco
+        center: mapState.center,
         zoom: mapState.zoom,
       });
 
       // Adicionando controle de zoom.
       map.current.addControl(new maplibregl.NavigationControl(), "top-left");
 
-      const scale = new maplibregl.ScaleControl({
-        maxWidth: 100,
-        unit: "metric",
-      });
+      //Escala do mapa
+      map.current.addControl(
+        new maplibregl.ScaleControl({
+          maxWidth: 100,
+          unit: "metric",
+        }),
+        "bottom-left"
+      );
 
-      map.current.addControl(scale, "bottom-left");
+      /* Adicionando os dados para o mapa */
 
-      map.current.on("load", () => {
+      map.current.on("load", async () => {
         map.current!.addSource("points", {
           type: "geojson",
           data: {
@@ -300,17 +317,39 @@ const Map: React.FC<MapComponentProps> = () => {
           },
         });
 
-        console.log("Source:", map.current!.getSource("limite"));
-
         map.current!.addLayer({
           id: "limite-layer",
           type: "fill",
           source: "limite",
           layout: {},
           paint: {
-            "fill-color": "#808080",
-            "fill-opacity": 0.8,
+            "fill-color": [
+              "match",
+              ["get", "morfologia"],
+              "Enclave",
+              "#00f0f0",
+              "Linha",
+              "#f900f9",
+              "Malha",
+              "#a7a700",
+              "Quadra",
+              "#009933",
+              /* default */ "#808080",
+            ],
+            "fill-opacity": 0.2,
             "fill-outline-color": "#000",
+          },
+        });
+
+        map.current!.addLayer({
+          id: "limite-outline-layer",
+          type: "line",
+          source: "limite",
+          layout: {},
+          paint: {
+            "line-color": "#000000",
+            "line-width": 1,
+            "line-opacity": 1,
           },
         });
 
@@ -322,7 +361,25 @@ const Map: React.FC<MapComponentProps> = () => {
             visibility: isSubapVisible ? "visible" : "none",
           },
           paint: {
-            "fill-color": "#ffdb63",
+            "fill-color": [
+              "match",
+              ["get", "cod_rp"],
+              "3.1",
+              "#dc61a5",
+              "3.2",
+              "#59d12a",
+              "3.3",
+              "#484dcb",
+              "3.4",
+              "#da9b3c",
+              "3.5",
+              "#79cb9f",
+              "3.6",
+              "#1fb9e4",
+              "3.7",
+              "#d5d03d",
+              "#b873d5",
+            ],
             "fill-opacity": 0.2,
             "fill-outline-color": "#000",
           },
@@ -337,7 +394,18 @@ const Map: React.FC<MapComponentProps> = () => {
           },
           paint: {
             "line-color": "#000000",
-            "line-width": 1,
+            "line-width": 0.5,
+            "line-opacity": 1,
+          },
+        });
+
+        map.current!.addLayer({
+          id: "caminhos-layer",
+          type: "line",
+          source: "caminhos",
+          paint: {
+            "line-color": "#dbff10",
+            "line-width": 2,
             "line-opacity": 1,
           },
         });
@@ -372,6 +440,49 @@ const Map: React.FC<MapComponentProps> = () => {
           paint: {
             "circle-color": "#4ebbee",
             "circle-radius": 5,
+          },
+        });
+
+        const busStopImage = await map.current!.loadImage(
+          "/assets/bus_stop-icon.png"
+        );
+        map.current!.addImage("busStop", busStopImage.data);
+        console.log(map.current!.getImage("busStop"));
+
+        // map.current!.addLayer({ //outra opção de imagem para os pontos
+        //   id: "pOnibus-layer",
+        //   type: "symbol",
+        //   source: "pOnibus",
+        //   layout: {
+        //     visibility: "none",
+        //     "icon-image": "busStop",
+        //     "icon-size": 0.08,
+        //   },
+        // });
+        map.current!.addLayer({
+          id: "pOnibus-layer",
+          type: "circle",
+          source: "pOnibus",
+          layout: {
+            visibility: "none",
+          },
+          paint: {
+            "circle-color": "#39d4a6",
+            "circle-radius": 4,
+          },
+        });
+
+        map.current!.addLayer({
+          id: "pTrem-layer",
+          type: "circle",
+          source: "pTrem",
+          layout: {
+            visibility: "none",
+          },
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-color": "#d0e76a",
+            "circle-radius": 4,
           },
         });
       });
@@ -411,11 +522,13 @@ const Map: React.FC<MapComponentProps> = () => {
             cod_bairro: properties.cod_bairro,
             bairro: properties.bairro,
             favela: properties.favela,
+            morfologia: properties.morfologia,
             cat_entrada: properties.cat_entrada,
             tipo_entrada: properties.tipo_entrada,
             grau_entrada: properties.grau_entrada,
           });
           setInfoOpen(true);
+          setFavelaSelected(properties.favela);
         }
       });
 
@@ -453,7 +566,7 @@ const Map: React.FC<MapComponentProps> = () => {
   ]);
 
   useEffect(() => {
-    if (!map.current) return; //garantir que o mapa existe
+    if (!map.current) return;
 
     if (map.current.getLayer("pMetro-layer")) {
       map.current.setLayoutProperty(
@@ -476,49 +589,94 @@ const Map: React.FC<MapComponentProps> = () => {
         "visibility",
         isSubapVisible ? "visible" : "none"
       );
+      map.current.setLayoutProperty(
+        "pOnibus-layer",
+        "visibility",
+        isPOnibusVisible ? "visible" : "none"
+      );
+      map.current.setLayoutProperty(
+        "pTrem-layer",
+        "visibility",
+        isPTremVisible ? "visible" : "none"
+      );
+
+      map.current.setPaintProperty("limite-layer", "fill-opacity", [
+        "match",
+        ["get", "nome"],
+        favelaSelected,
+        0.8,
+        0.2,
+      ]);
     }
-  }, [isPMetroVisible, isSubapVisible]);
+  }, [
+    isPMetroVisible,
+    isSubapVisible,
+    isPOnibusVisible,
+    isPTremVisible,
+    favelaSelected,
+  ]);
 
   return (
     <Container>
       <MapContainer ref={mapContainer} />
       <ControlContainer>
-        <label>
-          <input
-            type="checkbox"
-            checked={isSubapVisible}
-            onChange={() => setIsSubapVisiblee(!isSubapVisible)}
-          />
-          Sub Aps
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={isPMetroVisible}
-            onChange={() => setIsPMetroVisible(!isPMetroVisible)}
-          />
-          Estações de Metrô
-        </label>
+        <details>
+          <summary>Limites</summary>
+          <label>
+            <input
+              type="checkbox"
+              checked={isSubapVisible}
+              onChange={() => setIsSubapVisiblee(!isSubapVisible)}
+            />
+            Bairros
+          </label>
+        </details>
+        <details>
+          <summary>Transporte</summary>
+          <label>
+            <input
+              type="checkbox"
+              checked={isPMetroVisible}
+              onChange={() => setIsPMetroVisible(!isPMetroVisible)}
+            />
+            Estações de Metrô
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={isPOnibusVisible}
+              onChange={() => setIsPOnibusVisible(!isPOnibusVisible)}
+            />
+            Pontos de Ônibus
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={isPTremVisible}
+              onChange={() => setIsPTremVisible(!isPTremVisible)}
+            />
+            Estações de Trem
+          </label>
+        </details>
       </ControlContainer>
-      {infoOpen ? (
-        <InformationContainer open={infoOpen}>
-          <InformationButton onClick={() => setInfoOpen(false)}>
-            x
-          </InformationButton>
-          <Information
-            rp_cod={infoState.rp_cod}
-            rp={infoState.rp}
-            ra_cod={infoState.ra_cod}
-            ra={infoState.ra}
-            cod_bairro={infoState.cod_bairro}
-            bairro={infoState.bairro}
-            favela={infoState.favela}
-            cat_entrada={infoState.cat_entrada}
-            tipo_entrada={infoState.tipo_entrada}
-            grau_entrada={infoState.grau_entrada}
-          />
-        </InformationContainer>
-      ) : null}
+      <InformationContainer open={infoOpen}>
+        <InformationButton onClick={() => setInfoOpen(false)}>
+          x
+        </InformationButton>
+        <Information
+          rp_cod={infoState.rp_cod}
+          rp={infoState.rp}
+          ra_cod={infoState.ra_cod}
+          ra={infoState.ra}
+          cod_bairro={infoState.cod_bairro}
+          bairro={infoState.bairro}
+          favela={infoState.favela}
+          morfologia={infoState.morfologia}
+          cat_entrada={infoState.cat_entrada}
+          tipo_entrada={infoState.tipo_entrada}
+          grau_entrada={infoState.grau_entrada}
+        />
+      </InformationContainer>
     </Container>
   );
 };

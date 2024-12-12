@@ -7,11 +7,8 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 10%;
-  //padding: 10px 20px 10px 20px;
+  height: 10vh;
   color: #000;
-  position: fixed;
-  top: 0;
   box-shadow: 0px 5px 24px rgba(0, 0, 0, 0.1);
   z-index: 10;
 `;

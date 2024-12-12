@@ -5,18 +5,20 @@ SELECT
     'type', 'Point',
     'coordinates', 
     json_build_array(
-      ST_X(ST_Transform(geom, 4326)),
-      ST_Y(ST_Transform(geom, 4326))
+      ST_X(ST_Transform(ma.geom, 4326)),
+      ST_Y(ST_Transform(ma.geom, 4326))
     )
   ) as geometry,
   json_build_object(
     'fid', ma.fid,'rp_cod', ma.bairro_c_0, 'rp', ma.bairro_rp , 'ra_cod', ma.bairro_c_1, 'ra', ma.bairro_ra, 'cod_bairro', ma.bairro_c_2, 'bairro', ma.bairro_nom, 'favela', ma.plan_favel,
-    'cat_entrada', ma.plan_cat, 'tipo_entrada', ma.plan_tipo, 'grau_entrada', ma.plan_grau
+    'morfologia', mafcm.morfologia, 'cat_entrada', ma.plan_cat, 'tipo_entrada', ma.plan_tipo, 'grau_entrada', ma.plan_grau
   ) as properties
 FROM 
-  public."BASE-GERAL_2024_MFV_AP3_INTEGRADOS" ma
+  public."BASE-GERAL_2024_MFV_AP3_INTEGRADOS" ma,
+  public."MFV_AP3_FAVELAS_CAT_MORFO" mafcm 
 WHERE 
-  ST_Z(geom) IS NULL OR ST_Z(geom) = 0;
+  ST_Z(ma.geom) IS NULL OR ST_Z(ma.geom) = 0
+ 	and ma.plan_favel = unaccent(mafcm.nome);
 `;
 
 const getCaminhos = `

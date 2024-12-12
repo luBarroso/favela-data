@@ -21,9 +21,10 @@ export const InformationContainer = styled.div<{ open: boolean }>`
   right: ${({ open }) => (open ? "0" : "-100%")};
   background: #fff;
   margin-top: 5%;
-  width: 30%;
+  width: 20vw;
   height: 100%;
   color: #000;
+  padding: 10px;
   transition: right 0.5s ease;
 `;
 
@@ -32,8 +33,9 @@ export const InformationButton = styled.button`
   justify-content: center;
   align-items: center;
   align-self: flex-end;
-  padding: 20px;
+  padding: 10px 15px 10px 15px;
   border: 0;
+  outline: 0;
   background: transparent;
 
   color: black;
@@ -41,9 +43,26 @@ export const InformationButton = styled.button`
 
 export const ControlContainer = styled.div`
   position: fixed;
+  background: #fff;
+  color: #000;
+  padding: 10px;
+  border-radius: 3px;
   left: 20px;
   top: 100px;
   display: flex;
   flex-direction: column;
   margin-left: 40px;
+
+  details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+  }
 `;

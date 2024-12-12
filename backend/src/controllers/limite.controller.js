@@ -1,11 +1,9 @@
-const pool = require("../../db");
-const queries = require("./queries");
+const pool = require("../../database/db");
+const queries = require("../queries/limite.queries");
 
 const getLimite = (req, res) => {
   pool.query(queries.getLimites, (error, results) => {
     if (error) throw error;
-
-    console.log("tentou acessar");
     res.status(200).json(results.rows);
   });
 };
@@ -13,8 +11,6 @@ const getLimite = (req, res) => {
 const getSubAps = (req, res) => {
   pool.query(queries.getSubAps, (error, results) => {
     if (error) throw error;
-
-    console.log("tentou acessar");
     res.status(200).json(results.rows);
   });
 };

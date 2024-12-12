@@ -1,4 +1,4 @@
-import { InfoText } from "./styles";
+import { AreaCotainer, InfoText } from "./styles";
 
 interface Props {
   rp_cod: string;
@@ -8,6 +8,7 @@ interface Props {
   cod_bairro: number;
   bairro: string;
   favela: string;
+  morfologia: string;
   cat_entrada: string;
   tipo_entrada: string;
   grau_entrada: string;
@@ -21,22 +22,26 @@ export const Information = ({
   cod_bairro: cod_bairro,
   bairro: bairro,
   favela: favela,
+  morfologia: morfologia,
   cat_entrada: cat_entrada,
   tipo_entrada: tipo_entrada,
   grau_entrada: grau_entrada,
 }: Props) => {
   return (
     <>
-      <InfoText>códido da RP: {rp_cod}</InfoText>
-      <InfoText>RP: {rp}</InfoText>
-      <InfoText>códido da RA: {ra_cod}</InfoText>
-      <InfoText>RA: {ra}</InfoText>
-      <InfoText>código do bairro: {cod_bairro}</InfoText>
-      <InfoText>bairro: {bairro}</InfoText>
-      <InfoText>favela: {favela}</InfoText>
-      <InfoText>categoria de entrada: {cat_entrada}</InfoText>
-      <InfoText>tipo de entarda: {tipo_entrada}</InfoText>
-      <InfoText>grau de entarda: {grau_entrada}</InfoText>
+      <AreaCotainer>
+        <InfoText>Favela: {favela}</InfoText>
+        <InfoText>Morfologia: {morfologia}</InfoText>
+        <InfoText>Bairro: {bairro}</InfoText>
+        <InfoText>Código do bairro: {cod_bairro}</InfoText>
+        <InfoText>Região de Plenejamento: {rp}</InfoText>
+        <InfoText>Códido da RP: {rp_cod}</InfoText>
+        <InfoText>Região Administrativa: {ra}</InfoText>
+        <InfoText>Códido da RA: {ra_cod}</InfoText>
+      </AreaCotainer>
+      <InfoText>Categoria de entrada: {cat_entrada}</InfoText>
+      <InfoText>Tipologia de entarda: {tipo_entrada}</InfoText>
+      <InfoText>Grau de entarda: {grau_entrada}</InfoText>
     </>
   );
 };
