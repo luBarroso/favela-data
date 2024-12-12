@@ -19,6 +19,14 @@ O backend do projeto é construído com **Node.js** e utiliza o banco de dados *
     DB_PORT=...
 ```
 
+### Rodando o Backend
+
+1. Para rodar o backend em desenvolvimento, execute o seguinte comando:
+
+   ```bash
+   npm start
+   ```
+
 ## Frontend
 
 O frontend do projeto foi construído com **Vite** e **React**. Ele oferece uma interface interativa para visualizar os dados e insights sobre as favelas. Para a visualização do mapa com os dados, foi utilizada a biblioteca **MapLibre**.
@@ -29,7 +37,6 @@ O frontend do projeto foi construído com **Vite** e **React**. Ele oferece uma 
 
    ```bash
    npm run dev
-
    ```
 
 1. Para gerar o build de produção, use:
